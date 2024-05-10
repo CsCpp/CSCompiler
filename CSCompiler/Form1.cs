@@ -26,20 +26,32 @@ namespace CSCompiler
             CSharpCodeProvider provider = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion",frameworkTBox.Text} });
             CompilerParameters parameters = new CompilerParameters(new string[] {"mscorlib.dll","System.Core.dll"},nameTextBox.Text,true);
             parameters.GenerateExecutable=true;
-            CompilerResults results = provider.CompileAssemblyFromSource(parameters,codBox.Text);   
-            if(results.Errors.HasErrors )
-            {
-            foreach(CompilerError error in results.Errors.Cast<CompilerError>() )
-                {
-                    statusBox.Text += $"Строка {error.Line}:     {error.ErrorText}";
-                }
-            }
-            else
-            {
-                statusBox.Text = "---------Сборка завершена------------";
-                Process.Start($"{Application.StartupPath}/{nameTextBox.Text}");
-            }
 
+            try
+            {
+                CompilerResults results = provider.CompileAssemblyFromSource(parameters, codBox.Text);
+                if (results.Errors.HasErrors)
+                {
+                    foreach (CompilerError error in results.Errors.Cast<CompilerError>())
+                    {
+                        statusBox.Text += $"Строка {error.Line}:     {error.ErrorText}";
+                    }
+                }
+                else
+                {
+                    statusBox.Text = "---------Сборка завершена------------";
+                    Process.Start($"{Application.StartupPath}/{nameTextBox.Text}");
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                statusBox.Text=ex.Message;
+              
+            }
+              
+          
 
 
         }
